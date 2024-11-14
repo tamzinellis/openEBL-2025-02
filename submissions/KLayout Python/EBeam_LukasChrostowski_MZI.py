@@ -135,9 +135,10 @@ connect_pins_with_waveguide(instY1, 'opt3', instY2, 'opt2', waveguide_type=waveg
 # 3rd MZI, with a very long delay line
 cell_ebeam_delay = ly.create_cell('spiral_paperclip', 'EBeam_Beta',
                                   {'waveguide_type':waveguide_type_delay,
-                                   'length':200,
+                                   'length':130,
+                                   'loops':12,
                                    'flatten':True})
-x,y = 60000, 205000
+x,y = 60000, 265000
 instGC = coupler_array(cell, 
          cell_name = 'GC_TE_1550_8degOxide_BB',
          cell_library = tech_name,
@@ -181,7 +182,7 @@ num_errors = layout_check(cell = cell, verbose=False, GUI=True, file_rdb=file_ly
 print('Number of errors: %s' % num_errors)
 
 # Create an image of the layout
-cell.image(os.path.join(path,filename+'.png'))   
+# cell.image(os.path.join(path,filename+'.png'))   
 
 # Display the layout in KLayout, using KLayout Package "klive", which needs to be installed in the KLayout Application
 if Python_Env == 'Script':
