@@ -30,12 +30,13 @@ top_cell_name = 'EBeam_%s_MZI' % designer_name
 export_type = 'static'  # static: for fabrication, PCell: include PCells in file
 
 import pya
-from pya import *
+from pya import Trans, CellInstArray, Text
 
 import SiEPIC
 from SiEPIC._globals import Python_Env
 from SiEPIC.scripts import connect_cell, connect_pins_with_waveguide, zoom_out, export_layout
-from SiEPIC.utils.layout import new_layout, floorplan
+from SiEPIC.utils import create_cell2
+from SiEPIC.utils.layout import new_layout, floorplan, coupler_array
 from SiEPIC.extend import to_itype
 from SiEPIC.verification import layout_check
 
@@ -74,59 +75,60 @@ waveguide_type='Strip TE 1550 nm, w=500 nm'
 waveguide_type_delay='Si routing TE 1550 nm (compound waveguide)'
 
 # Load cells from library
-cell_ebeam_gc = ly.create_cell('GC_TE_1550_8degOxide_BB', tech_name)
-cell_ebeam_y = ly.create_cell('ebeam_y_1550', tech_name)
-cell_ebeam_y_dream = ly.create_cell('ebeam_dream_splitter_1x2_te1550_BB', 'EBeam-Dream',{})
+# SiEPIC create_cell2 is an enhanced version (with error checking) of pya.Layout.create_cell
+cell_ebeam_gc = create_cell2(ly, 'GC_TE_1550_8degOxide_BB', tech_name)
+cell_ebeam_y = create_cell2(ly, 'ebeam_y_1550', tech_name)
+cell_ebeam_y_dream = create_cell2(ly, 'ebeam_dream_splitter_1x2_te1550_BB', 'EBeam-Dream')
 
 # grating couplers, place at absolute positions
-x,y = 60000, 15000
-t = Trans(Trans.R0,x,y)
-instGC1 = cell.insert(CellInstArray(cell_ebeam_gc.cell_index(), t))
-t = Trans(Trans.R0,x,y+127000)
-instGC2 = cell.insert(CellInstArray(cell_ebeam_gc.cell_index(), t))
-
 # automated test label
-text = Text ("opt_in_TE_1550_device_%s_MZI1" % designer_name, t)
-cell.shapes(ly.layer(ly.TECHNOLOGY['Text'])).insert(text).text_size = 5/dbu
+x,y = 60000, 15000
+instGC = coupler_array(cell, 
+         cell_name = 'GC_TE_1550_8degOxide_BB',
+         cell_library = tech_name,
+         x_offset = x, y_offset = y,
+         label = "opt_in_TE_1550_device_%s_MZI1" % designer_name,
+         #cell_params = None,
+         count = 2,
+         )    
 
 # Y branches:
-# Version 1: place it at an absolute position:
+# Approach #1: place it at an absolute position:
 t = Trans.from_s('r0 %s, %s' % (x+20000,y))
 instY1 = cell.insert(CellInstArray(cell_ebeam_y.cell_index(), t))
 
-# Version 2: attach it to an existing component, then move relative
-instY2 = connect_cell(instGC2, 'opt1', cell_ebeam_y, 'opt1')
+# Approach #2: attach it to an existing component, then move relative
+instY2 = connect_cell(instGC[0], 'opt1', cell_ebeam_y, 'opt1')
 instY2.transform(Trans(20000,-10000))
 
 # Waveguides:
-
-connect_pins_with_waveguide(instGC1, 'opt1', instY1, 'opt1', waveguide_type=waveguide_type)
-connect_pins_with_waveguide(instGC2, 'opt1', instY2, 'opt1', waveguide_type=waveguide_type)
+connect_pins_with_waveguide(instGC[1], 'opt1', instY1, 'opt1', waveguide_type=waveguide_type)
+connect_pins_with_waveguide(instGC[0], 'opt1', instY2, 'opt1', waveguide_type=waveguide_type)
 connect_pins_with_waveguide(instY1, 'opt2', instY2, 'opt3', waveguide_type=waveguide_type)
 connect_pins_with_waveguide(instY1, 'opt3', instY2, 'opt2', waveguide_type=waveguide_type,turtle_B=[25,-90])
 
 # 2nd MZI using Dream Photonics 1x2 splitter
 # grating couplers, place at absolute positions
 x,y = 180000, 15000
-t = Trans(Trans.R0,x,y)
-instGC1 = cell.insert(CellInstArray(cell_ebeam_gc.cell_index(), t))
-t = Trans(Trans.R0,x,y+127000)
-instGC2 = cell.insert(CellInstArray(cell_ebeam_gc.cell_index(), t))
-
-# automated test label
-text = Text ("opt_in_TE_1550_device_%s_MZI2" % designer_name, t)
-cell.shapes(ly.layer(ly.TECHNOLOGY['Text'])).insert(text).text_size = 5/dbu
+instGC = coupler_array(cell, 
+         cell_name = 'GC_TE_1550_8degOxide_BB',
+         cell_library = tech_name,
+         x_offset = x, y_offset = y,
+         label = "opt_in_TE_1550_device_%s_MZI2" % designer_name,
+         #cell_params = None,
+         count = 2,
+         )    
 
 # Y branches:
-instY1 = connect_cell(instGC1, 'opt1', cell_ebeam_y_dream, 'opt1')
+instY1 = connect_cell(instGC[1], 'opt1', cell_ebeam_y_dream, 'opt1')
 instY1.transform(Trans(20000,0))
-instY2 = connect_cell(instGC2, 'opt1', cell_ebeam_y_dream, 'opt1')
+instY2 = connect_cell(instGC[0], 'opt1', cell_ebeam_y_dream, 'opt1')
 instY2.transform(Trans(20000,0))
 
 # Waveguides:
 
-connect_pins_with_waveguide(instGC1, 'opt1', instY1, 'opt1', waveguide_type=waveguide_type)
-connect_pins_with_waveguide(instGC2, 'opt1', instY2, 'opt1', waveguide_type=waveguide_type)
+connect_pins_with_waveguide(instGC[1], 'opt1', instY1, 'opt1', waveguide_type=waveguide_type)
+connect_pins_with_waveguide(instGC[0], 'opt1', instY2, 'opt1', waveguide_type=waveguide_type)
 connect_pins_with_waveguide(instY1, 'opt2', instY2, 'opt3', waveguide_type=waveguide_type)
 connect_pins_with_waveguide(instY1, 'opt3', instY2, 'opt2', waveguide_type=waveguide_type,turtle_B=[125,-90])
 
@@ -136,19 +138,18 @@ cell_ebeam_delay = ly.create_cell('spiral_paperclip', 'EBeam_Beta',
                                    'length':200,
                                    'flatten':True})
 x,y = 60000, 205000
-t = Trans(Trans.R0,x,y)
-instGC1 = cell.insert(CellInstArray(cell_ebeam_gc.cell_index(), t))
-t = Trans(Trans.R0,x,y+127000)
-instGC2 = cell.insert(CellInstArray(cell_ebeam_gc.cell_index(), t))
-
-# automated test label
-text = Text ("opt_in_TE_1550_device_%s_MZI3" % designer_name, t)
-cell.shapes(ly.layer(ly.TECHNOLOGY['Text'])).insert(text).text_size = 5/dbu
+instGC = coupler_array(cell, 
+         cell_name = 'GC_TE_1550_8degOxide_BB',
+         cell_library = tech_name,
+         x_offset = x, y_offset = y,
+         label = "opt_in_TE_1550_device_%s_MZI3" % designer_name,
+         count = 2,
+         )    
 
 # Y branches:
-instY1 = connect_cell(instGC1, 'opt1', cell_ebeam_y_dream, 'opt1')
+instY1 = connect_cell(instGC[1], 'opt1', cell_ebeam_y_dream, 'opt1')
 instY1.transform(Trans(20000,0))
-instY2 = connect_cell(instGC2, 'opt1', cell_ebeam_y_dream, 'opt1')
+instY2 = connect_cell(instGC[0], 'opt1', cell_ebeam_y_dream, 'opt1')
 instY2.transform(Trans(20000,0))
 
 # Spiral:
@@ -156,8 +157,8 @@ instSpiral = connect_cell(instY2, 'opt2', cell_ebeam_delay, 'optA')
 instSpiral.transform(Trans(20000,0))
 
 # Waveguides:
-connect_pins_with_waveguide(instGC1, 'opt1', instY1, 'opt1', waveguide_type=waveguide_type)
-connect_pins_with_waveguide(instGC2, 'opt1', instY2, 'opt1', waveguide_type=waveguide_type)
+connect_pins_with_waveguide(instGC[1], 'opt1', instY1, 'opt1', waveguide_type=waveguide_type)
+connect_pins_with_waveguide(instGC[0], 'opt1', instY2, 'opt1', waveguide_type=waveguide_type)
 connect_pins_with_waveguide(instY1, 'opt2', instY2, 'opt3', waveguide_type=waveguide_type)
 connect_pins_with_waveguide(instY2, 'opt2', instSpiral, 'optA', waveguide_type=waveguide_type)
 connect_pins_with_waveguide(instY1, 'opt3', instSpiral, 'optB', waveguide_type=waveguide_type,turtle_B=[5,-90])
@@ -181,5 +182,8 @@ print('Number of errors: %s' % num_errors)
 
 # Display the layout in KLayout, using KLayout Package "klive", which needs to be installed in the KLayout Application
 if Python_Env == 'Script':
-    from SiEPIC.utils import klive
-    klive.show(file_out, lyrdb_filename=file_lyrdb, technology=tech_name)
+    if version.parse(SiEPIC.__version__) > version.parse("0.5.16"):
+        cell.show(lyrdb_filename=file_lyrdb)
+    else:
+        from SiEPIC.utils import klive
+        klive.show(file_out, lyrdb_filename=file_lyrdb, technology=tech_name)
