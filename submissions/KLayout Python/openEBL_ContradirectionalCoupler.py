@@ -14,7 +14,7 @@ Script will generate an series of devices with the selected parameters, and gene
 
 Author: Lukas Chrostowski, Mustafa Hammood 
 
-March 2024 
+March 2024  
 '''
 
 print('SiEPIC_EBeam_PDK: openEBL_ContradirectionalCoupler.py')
