@@ -181,7 +181,7 @@ num_errors = layout_check(cell = cell, verbose=False, GUI=True, file_rdb=file_ly
 print('Number of errors: %s' % num_errors)
 
 # Create an image of the layout
-cell.image(os.path.join(path,filename+'.png'))  
+cell.image(os.path.join(path,filename+'.png'))   
 
 # Display the layout in KLayout, using KLayout Package "klive", which needs to be installed in the KLayout Application
 if Python_Env == 'Script':

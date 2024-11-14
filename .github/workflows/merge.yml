@@ -71,7 +71,7 @@ jobs:
 
       - name: install Python packages
         run: |
-          pip install siepic_ebeam_pdk
+          pip install siepic_ebeam_pdk IPython
           
       - name: run merge script
         run: |

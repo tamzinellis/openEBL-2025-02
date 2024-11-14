@@ -32,7 +32,7 @@ jobs:
 
       - name: install python packages
         run: |
-          pip install siepic_ebeam_pdk 
+          pip install siepic_ebeam_pdk IPython
 
       - name: run python scripts and get output gds / oas file
         run: |
