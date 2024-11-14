@@ -128,5 +128,5 @@ zoom_out(cell)
 # Save
 path = os.path.dirname(os.path.realpath(__file__))
 filename = os.path.splitext(os.path.basename(__file__))[0]
-file_out = export_layout(cell, path, filename, relative_path = '..', format='oas', screenshot=False)
+file_out = export_layout(topcell, path, filename, relative_path = '..', format='oas', screenshot=False)
 
