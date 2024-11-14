@@ -135,6 +135,6 @@ jobs:
           git config --local user.name "${{ github.actor }}"
           git add README.md
           git add merge/EBeam.png
-          git commit -m "update README with new artifact url $ARTIFACT_URL"
+          git commit -m "merged layout: $ARTIFACT_URL"
           git push
         if: env.TRIGGER_INFO != 'pull request' && github.repository_owner == 'SiEPIC'
