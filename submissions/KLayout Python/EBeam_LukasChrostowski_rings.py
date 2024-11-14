@@ -2,7 +2,7 @@
 Scripted layout for ring resonators using SiEPIC-Tools
 in the SiEPIC-EBeam-PDK "EBeam" technology
 
-by Lukas Chrostowski, 2025
+by Lukas Chrostowski, 2025 
 
 - Silicon waveguides
 - Several ring resonators with different radii and gap
