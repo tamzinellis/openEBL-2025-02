@@ -318,6 +318,12 @@ try:
 except:
     pass
 
+
+# Create an image of the layout
+import siepic_ebeam_pdk
+layout.technology_name = 'EBeam'
+top_cell.image(os.path.join(path,'EBeam.png'))
+
 print("KLayout EBeam_merge.py, completed in: %s seconds" % int((time.time() - start_time)))
 
 

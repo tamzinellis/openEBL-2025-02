@@ -180,6 +180,9 @@ file_lyrdb = os.path.join(path,filename+'.lyrdb')
 num_errors = layout_check(cell = cell, verbose=False, GUI=True, file_rdb=file_lyrdb)
 print('Number of errors: %s' % num_errors)
 
+# Create an image of the layout
+cell.image(os.path.join(path,filename+'.png'))
+
 # Display the layout in KLayout, using KLayout Package "klive", which needs to be installed in the KLayout Application
 if Python_Env == 'Script':
     if version.parse(SiEPIC.__version__) > version.parse("0.5.16"):

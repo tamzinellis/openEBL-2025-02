@@ -78,6 +78,8 @@ The verification and merging is performed using GitHub actions. The repository i
 
 ## Latest Merge Layout File
 
+<img alt="Merged Layout" src="./merge/EBeam.png">
+
 <!-- start-link -->
 https://github.com/SiEPIC/openEBL-2025-02/actions/runs/11832574105/artifacts/2186163089
 <!-- end-link -->
