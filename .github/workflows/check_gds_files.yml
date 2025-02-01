@@ -24,7 +24,9 @@ jobs:
           if [ "${{ github.event_name }}" == "push" ]; then
             echo "::set-output name=files::$(git diff --name-only --diff-filter=ACM ${{ github.event.before }} ${{ github.sha }})"
           else
-            echo "::set-output name=files::$(git diff --name-only --diff-filter=ACM FETCH_HEAD)"
+            # triggered on pull request, get all changed / added files from forked repo
+            echo "::set-output name=files::$(git diff --name-only --diff-filter=ACM origin/main...HEAD)"
+            # echo "::set-output name=files::$(git diff --name-only --diff-filter=ACM FETCH_HEAD)"
           fi
 
       - name: Check GDS and OAS file locations and names
