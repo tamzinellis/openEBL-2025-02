@@ -25,7 +25,7 @@ jobs:
             echo "::set-output name=files::$(git diff --name-only --diff-filter=ACM ${{ github.event.before }} ${{ github.sha }})"
           else
             # triggered on pull request, get all changed / added files from forked repo
-            echo "::set-output name=files::$(git diff --name-only --diff-filter=ACM origin/main...HEAD)"
+            echo "::set-output name=files::$(git diff --name-only --diff-filter=ACM origin/${{ github.base_ref }}...HEAD)"
             # echo "::set-output name=files::$(git diff --name-only --diff-filter=ACM FETCH_HEAD)"
           fi
 
