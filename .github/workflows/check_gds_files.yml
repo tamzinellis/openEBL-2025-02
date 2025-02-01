@@ -26,6 +26,16 @@ jobs:
       - name: Debug changed files
         run: |
           echo "Changed files: ${{ env.files }}"
+
+
+      - name: Debug File Paths
+        run: |
+          echo "Files detected: ${{ env.files }}"
+          mapfile -t file_array <<< "${{ env.files }}"
+          for file in "${file_array[@]}"; do
+            echo "Checking file: '$file'"
+          done
+        shell: bash
         
 
       - name: Check GDS and OAS file locations and names
