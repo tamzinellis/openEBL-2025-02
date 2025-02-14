@@ -26,11 +26,11 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           pull-request-number: ${{ github.event.pull_request.number }}
-          merge-method: squash  # Options: merge, squash, rebase
+          merge-method: merge  # Options: merge, squash, rebase
 
       - name: Merge PR if all checks pass
         uses: pascalgn/automerge-action@v0.15.6
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           MERGE_LABELS: ""
-          MERGE_DELETE_BRANCH: "true"
+          MERGE_DELETE_BRANCH: "false"
