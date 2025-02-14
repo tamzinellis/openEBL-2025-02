@@ -164,41 +164,6 @@ jobs:
             exit 1
           fi
 
-      - name: Post Failure Comment on PR
-        if: failure() && github.event_name == 'pull_request'
-        uses: actions/github-script@v6
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const fs = require('fs');
-            const issue_number = context.payload.pull_request.number;
-            const repo_owner = context.repo.owner;
-            const repo_name = context.repo.repo;
-            
-            // Read verification output
-            let logContent = "No detailed logs found.";
-            if (fs.existsSync('verification_output.txt')) {
-              logContent = fs.readFileSync('verification_output.txt', 'utf8');
-            }
-
-            // Limit log size to avoid API issues (GitHub has a 65536 character limit)
-            if (logContent.length > 60000) {
-              logContent = logContent.substring(0, 60000) + "\n\n[Log truncated...]";
-            }
-
-            const commentBody = `🚨 **Layout Verification Failed!** 🚨\n\n`
-              + `The following files failed verification:\n\n`
-              + `\`\`\`\n${process.env.files_with_errors || "No detailed errors captured."}\n\`\`\`\n\n`
-              + `### **Full Verification Log:**\n`
-              + `\`\`\`\n${logContent}\n\`\`\``;
-
-            await github.rest.issues.createComment({
-              owner: repo_owner,
-              repo: repo_name,
-              issue_number: issue_number,
-              body: commentBody
-            });
-
             
 # this can only run in pull_request_target, not pull_request
 #      - name: Checkout
