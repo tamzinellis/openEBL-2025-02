@@ -28,8 +28,8 @@ br_cutout_x = 7484000
 br_cutout_y = 898000
 br_cutout2_x = 7855000
 br_cutout2_y = 5063000
-tr_cutout_x = 7037000
-tr_cutout_y = 8494000
+tr_cutout_x = [6080e3, 6408e3]
+tr_cutout_y = [4549e3, 3148e3]
 
 filename_out = 'EBeam'
 layers_keep = ['1/0','1/10', '68/0', '81/0', '10/0', '99/0', '26/0', '31/0', '32/0', '33/0', '998/0']
@@ -280,10 +280,11 @@ for f in [f for f in files_in if '.oas' in f.lower() or '.gds' in f.lower()]:
                 y = cell_Height + cell_Gap_Height
                 x += cell_Width + cell_Gap_Width
             # check top right cutout for PCM
-            if x + cell_Width > tr_cutout_x and y + cell_Height > tr_cutout_y:
-                # go to the next column
-                y = cell_Height + cell_Gap_Height    
-                x += cell_Width + cell_Gap_Width
+            for i in range(len(tr_cutout_x)):
+                if x + cell_Width > tr_cutout_x[i] and y + cell_Height > tr_cutout_y[i]:
+                    # go to the next column
+                    y = cell_Height + cell_Gap_Height    
+                    x += cell_Width + cell_Gap_Width
             # Check bottom right cutout for PCM
             if x + cell_Width > br_cutout_x and y < br_cutout_y:
                 y = br_cutout_y
