@@ -80,37 +80,39 @@ try:
       print('Error: Cell bounding box / extent (%s, %s) is larger than the maximum size of %s X %s microns' % (bbox.width()/1000, bbox.height()/1000, cell_Width/1000, cell_Height/1000) )
       num_errors += 1
 
+
+   # Check black box cells, by replacing them with an empty cell, 
+   # then checking if there are any BB geometries left over
+   dummy_layout = pya.Layout()
+   dummy_cell = dummy_layout.create_cell("dummy_cell")
+   dummy_file = "dummy_cell.gds"
+   dummy_cell.write(dummy_file)
+   bb_count = 0
+   print ('Performing Black Box cell replacement check')
+   for i in range(len(bb_cells)):
+      text_out, count, error = replace_cell(layout, 
+            cell_x_name = bb_cells[i], 
+            cell_y_name = dummy_cell.name, 
+            cell_y_file = dummy_file, 
+            Exact = False, RequiredCharacter='$',
+            run_layout_diff = False,
+            debug = False,)
+      if count and count > 0:
+         bb_count += count
+         print(' - black box cell: %s' % bb_cells[i])
+   print (' - Number of black box cells to be replaced: %s' % bb_count)
+
+   cells_bb = cells_containing_bb_layers(top_cell, BB_layerinfo=pya.LayerInfo(998,0), verbose=False)
+   print(' - Number of unreplaced BB cells: %s' % len(cells_bb))
+   if len(cells_bb) > 0:
+      print(' - Names of unreplaced BB cells: %s' % set(cells_bb))
+      print('ERROR: unidentified black box cells. Please ensure that the design only uses cells contained in the PDK: https://github.com/SiEPIC/SiEPIC_EBeam_PDK. Also ensure that the cells have not been modified in any way (rotations, origin changes, resizing, renaming).')
+   num_errors += len(cells_bb)
+
 except:
-   print('Unknown error occurred')
-   num_errors = 1
-
-# Check black box cells, by replacing them with an empty cell, 
-# then checking if there are any BB geometries left over
-dummy_layout = pya.Layout()
-dummy_cell = dummy_layout.create_cell("dummy_cell")
-dummy_file = "dummy_cell.gds"
-dummy_cell.write(dummy_file)
-bb_count = 0
-print ('Performing Black Box cell replacement check')
-for i in range(len(bb_cells)):
-   text_out, count, error = replace_cell(layout, 
-         cell_x_name = bb_cells[i], 
-         cell_y_name = dummy_cell.name, 
-         cell_y_file = dummy_file, 
-         Exact = False, RequiredCharacter='$',
-         run_layout_diff = False,
-         debug = False,)
-   if count and count > 0:
-      bb_count += count
-      print(' - black box cell: %s' % bb_cells[i])
-print (' - Number of black box cells to be replaced: %s' % bb_count)
-
-cells_bb = cells_containing_bb_layers(top_cell, BB_layerinfo=pya.LayerInfo(998,0), verbose=False)
-print(' - Number of unreplaced BB cells: %s' % len(cells_bb))
-if len(cells_bb) > 0:
-   print('ERROR: unidentified black box cells. Please ensure that the design only uses cells contained in the PDK: https://github.com/SiEPIC/SiEPIC_EBeam_PDK. Also ensure that the cells have not been modified in any way (rotations, origin changes, resizing, renaming).')
-num_errors += len(cells_bb)
-
+   print('Runtime exception.')
+   if num_errors == 0:
+      num_errors = 1
 
 # Print the result value to standard output
 print(num_errors)
