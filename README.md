@@ -5,6 +5,7 @@
 - More details about <a href="https://siepic.ca/openEBL/">openEBL</a>.
 - **Submission deadline: February 15, 2025.**
 - The previous submission was in [October 2024](https://github.com/SiEPIC/openEBL-2024-10). You can look at previous designs for inspiration.
+- The next fabrication run is in [May 2025](https://github.com/SiEPIC/openEBL-2025-05).
 
 # Fabrication process: Passive Silicon
 ## Technical summary:
