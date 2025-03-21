@@ -85,3 +85,22 @@ Click on the following link to download the EBeam.oas merged layout file:
 <!-- start-link -->
 https://github.com/SiEPIC/openEBL-2025-02/actions/runs/13386222983/artifacts/2607505188
 <!-- end-link -->
+
+## SEM images of the fabricated designs
+
+Scanning electron microscope images of some of the devices from this fabrication run were taken, and are available in the "SEM images" folder, and shown here:
+
+
+![SEM image – ring resonators](./SEM%20images/CR_038.jpg)
+![SEM image – ring resonators](./SEM%20images/CR_040.jpg)
+![SEM image – 1x2 splitter](./SEM%20images/CR_041.jpg)
+![SEM image – subwavelength grating waveguides](./SEM%20images/CR_042.jpg)
+
+![SEM image – Bragg grating](./SEM%20images/CR_056.jpg)
+![SEM image – Bragg grating contra directional coupler](./SEM%20images/CR_055.jpg)
+
+![SEM image – 1D photonic crystal resonator](./SEM%20images/CR_058.jpg)
+
+![SEM image – lithgraphy test structure](./SEM%20images/CR_049.jpg)
+![SEM image – lithgraphy test structure](./SEM%20images/CR_050.jpg)
+
