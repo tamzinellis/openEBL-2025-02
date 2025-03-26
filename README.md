@@ -86,6 +86,10 @@ Click on the following link to download the EBeam.oas merged layout file:
 https://github.com/SiEPIC/openEBL-2025-02/actions/runs/13386222983/artifacts/2607505188
 <!-- end-link -->
 
+## Measurements
+
+https://qdot-nexus.phas.ubc.ca:25683/s/qioaZK3zJJQc44M
+
 ## SEM images of the fabricated designs
 
 Scanning electron microscope images of some of the devices from this fabrication run were taken, and are available in the "SEM images" folder, and shown here:
